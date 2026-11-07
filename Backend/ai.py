@@ -29,4 +29,6 @@ def ask_claude(history):
 
     if response.stop_reason == "refusal":
         return "Sorry, I can't help with that request."
-    return "".join(block.text for block in response.content if block.type == "text")
+    text = "".join(block.text for block in response.content if block.type == "text").strip()
+    # an empty reply can't be sent back to the API later, so never save one
+    return text or "Sorry, I couldn't come up with an answer. Please try again."

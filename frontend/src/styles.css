@@ -55,6 +55,7 @@ button { font: inherit; cursor: pointer; border: none; }
   padding: 16px;
   overflow-y: auto;
 }
+.sidebar.disabled { opacity: 0.6; pointer-events: none; }
 .new-chat {
   width: 100%;
   padding: 10px;
@@ -223,6 +224,7 @@ button { font: inherit; cursor: pointer; border: none; }
 @media (max-width: 700px) {
   .home { flex-direction: column; }
   .sidebar { width: 100%; max-height: 180px; border-right: none; border-bottom: 1px solid var(--border); }
+  .delete { opacity: 1; } /* phones have no hover, so always show the delete button */
   .bubble { max-width: 90%; }
   .developer { flex-direction: column; text-align: center; }
   .hero h1 { font-size: 2rem; }

@@ -4,6 +4,8 @@ async function request(path, options = {}) {
   const res = await fetch(`/api${path}`, {
     headers: { "Content-Type": "application/json" },
     ...options,
+  }).catch(() => {
+    throw new Error("Cannot reach the server. Is the backend running?");
   });
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));

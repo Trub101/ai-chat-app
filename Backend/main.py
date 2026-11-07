@@ -1,3 +1,4 @@
+import os
 from dotenv import load_dotenv
 
 load_dotenv()  # load .env before the other modules read environment variables
@@ -10,6 +11,7 @@ import db
 from schemas import ConversationOut, MessageIn, MessageOut
 
 app = FastAPI(title="AI Chat API")
+KEY_ERROR = "The server's Anthropic API key is missing or invalid."
 
 
 def check_exists(conversation_id: int):
@@ -42,6 +44,8 @@ def get_messages(conversation_id: int):
 @app.post("/api/conversations/{conversation_id}/messages", response_model=MessageOut)
 def send_message(conversation_id: int, body: MessageIn):
     check_exists(conversation_id)
+    if not os.getenv("ANTHROPIC_API_KEY"):
+        raise HTTPException(status_code=500, detail=KEY_ERROR)
 
     # full history + the new message, so Claude keeps the context of the chat
     history = [{"role": m["role"], "content": m["content"]} for m in db.get_messages(conversation_id)]
@@ -50,7 +54,7 @@ def send_message(conversation_id: int, body: MessageIn):
     try:
         reply = ai.ask_claude(history)
     except anthropic.AuthenticationError:
-        raise HTTPException(status_code=500, detail="The server's Anthropic API key is missing or invalid.")
+        raise HTTPException(status_code=500, detail=KEY_ERROR)
     except anthropic.APIError:
         raise HTTPException(status_code=502, detail="The AI service is not available right now. Please try again.")
 

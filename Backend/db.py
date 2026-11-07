@@ -11,26 +11,29 @@ def run(sql, params=(), fetch=False):
         password=os.getenv("MYSQL_PASSWORD"),
         database=os.getenv("MYSQL_DATABASE"),
     )
-    cursor = conn.cursor(dictionary=True)
-    cursor.execute(sql, params)
-    result = cursor.fetchall() if fetch else cursor.lastrowid
-    conn.commit()
-    cursor.close()
-    conn.close()
-    return result
+    try:
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute(sql, params)
+        result = cursor.fetchall() if fetch else cursor.lastrowid
+        conn.commit()
+        return result
+    finally:
+        conn.close()  # always close, even if the query fails
 
 
 def list_conversations():
     # The title is the start of the first user message. Empty chats are hidden.
+    # The most recently active chat comes first.
     return run(
         """
         SELECT c.id, c.created_at,
                (SELECT LEFT(m.content, 60) FROM messages m
                 WHERE m.conversation_id = c.id AND m.role = 'user'
-                ORDER BY m.id LIMIT 1) AS title
+                ORDER BY m.id LIMIT 1) AS title,
+               (SELECT MAX(m.id) FROM messages m WHERE m.conversation_id = c.id) AS last_message_id
         FROM conversations c
         HAVING title IS NOT NULL
-        ORDER BY c.id DESC
+        ORDER BY last_message_id DESC
         """,
         fetch=True,
     )

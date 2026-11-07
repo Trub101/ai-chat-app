@@ -80,6 +80,7 @@ export default function Home({ activeId, setActiveId }) {
         onNew={newChat}
         onOpen={openChat}
         onDelete={deleteChat}
+        disabled={loading} // switching chats mid-answer would show the reply in the wrong chat
       />
       <main className="chat">
         <ChatWindow messages={messages} loading={loading} />

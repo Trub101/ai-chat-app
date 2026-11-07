@@ -1,6 +1,6 @@
-export default function Sidebar({ conversations, activeId, onNew, onOpen, onDelete }) {
+export default function Sidebar({ conversations, activeId, onNew, onOpen, onDelete, disabled }) {
   return (
-    <aside className="sidebar">
+    <aside className={disabled ? "sidebar disabled" : "sidebar"}>
       <button className="new-chat" onClick={onNew}>+ New chat</button>
       <p className="sidebar-title">Previous chats</p>
       <ul>
