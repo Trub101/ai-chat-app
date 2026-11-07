@@ -1,0 +1,72 @@
+{
+  "info": {
+    "name": "AI Chat API",
+    "description": "Requests for the AI Chat FastAPI server. Run them top to bottom: 'Create conversation' saves the new id into the conversationId variable.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8000/api" },
+    { "key": "conversationId", "value": "1" }
+  ],
+  "item": [
+    {
+      "name": "List conversations",
+      "request": { "method": "GET", "url": "{{baseUrl}}/conversations" }
+    },
+    {
+      "name": "Create conversation",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 201', () => pm.response.to.have.status(201));",
+              "pm.collectionVariables.set('conversationId', pm.response.json().id);"
+            ]
+          }
+        }
+      ],
+      "request": { "method": "POST", "url": "{{baseUrl}}/conversations" }
+    },
+    {
+      "name": "Send message",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"content\": \"Hi! My name is Daniel.\"\n}" },
+        "url": "{{baseUrl}}/conversations/{{conversationId}}/messages"
+      }
+    },
+    {
+      "name": "Send follow-up message (tests context)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"content\": \"What is my name?\"\n}" },
+        "url": "{{baseUrl}}/conversations/{{conversationId}}/messages"
+      }
+    },
+    {
+      "name": "Get messages of conversation",
+      "request": { "method": "GET", "url": "{{baseUrl}}/conversations/{{conversationId}}/messages" }
+    },
+    {
+      "name": "Send empty message (validation error 422)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"content\": \"\"\n}" },
+        "url": "{{baseUrl}}/conversations/{{conversationId}}/messages"
+      }
+    },
+    {
+      "name": "Get unknown conversation (404)",
+      "request": { "method": "GET", "url": "{{baseUrl}}/conversations/999999/messages" }
+    },
+    {
+      "name": "Delete conversation",
+      "request": { "method": "DELETE", "url": "{{baseUrl}}/conversations/{{conversationId}}" }
+    }
+  ]
+}

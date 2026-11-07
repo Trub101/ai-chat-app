@@ -1,0 +1,37 @@
+# Start everything with:  docker compose up --build
+# Then open http://localhost:3000
+
+services:
+  mysql:
+    image: mysql:8.4
+    env_file: ./Backend/.env
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./Database/init.sql:/docker-entrypoint-initdb.d/init.sql  # creates the tables on first start
+      - mysql_data:/var/lib/mysql                                 # keeps chats after a restart
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      retries: 20
+
+  backend:
+    build: ./Backend
+    env_file: ./Backend/.env
+    environment:
+      DB_HOST: mysql  # inside Docker, MySQL is reached by its service name
+    ports:
+      - "8000:8000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  mysql_data:
