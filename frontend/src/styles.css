@@ -163,8 +163,11 @@ button { font: inherit; cursor: pointer; border: none; }
   font-weight: 600;
 }
 .input-bar button:disabled { opacity: 0.4; cursor: not-allowed; }
-.input-bar .attach { padding: 0 12px; background: var(--panel-2); font-size: 1.1rem; }
-.input-bar .attach:hover:not(:disabled) { animation: breathe 1.6s ease-in-out infinite; } /* gently "breathes" on hover */
+.input-bar .attach { padding: 0 12px; background: #3a3f4d; font-size: 1.1rem; } /* gray so it stands out */
+.input-bar .attach:hover:not(:disabled) {
+  background: #4a5061;
+  animation: breathe 1.6s ease-in-out infinite; /* "breathes" only while the mouse is over it */
+}
 @keyframes breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
 
 /* picture chosen but not sent yet */
