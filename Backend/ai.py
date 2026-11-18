@@ -10,9 +10,22 @@ SYSTEM_PROMPT = (
 client = anthropic.Anthropic()  # reads ANTHROPIC_API_KEY from the environment
 
 
+def to_claude_message(message):
+    """Turn one saved message into the format the Anthropic API expects."""
+    if not message.get("image"):
+        return {"role": message["role"], "content": message["content"]}
+
+    # "data:image/png;base64,AAAA" -> media type "image/png" and data "AAAA"
+    media_type, data = message["image"].removeprefix("data:").split(";base64,")
+    content = [{"type": "image", "source": {"type": "base64", "media_type": media_type, "data": data}}]
+    if message["content"]:
+        content.append({"type": "text", "text": message["content"]})
+    return {"role": message["role"], "content": content}
+
+
 def ask_claude(history):
     """Send the conversation history to Claude and return its reply text."""
-    messages = history[-MAX_HISTORY:]
+    messages = [to_claude_message(m) for m in history[-MAX_HISTORY:]]
     if messages[0]["role"] == "assistant":  # the API needs the first message to be from the user
         messages = messages[1:]
 

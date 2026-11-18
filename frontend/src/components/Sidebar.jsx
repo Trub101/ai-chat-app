@@ -7,7 +7,7 @@ export default function Sidebar({ conversations, activeId, onNew, onOpen, onDele
         {conversations.length === 0 && <li className="muted">No chats yet</li>}
         {conversations.map((c) => (
           <li key={c.id} className={c.id === activeId ? "active" : ""} onClick={() => onOpen(c.id)}>
-            <span className="chat-title">{c.title}</span>
+            <span className="chat-title">{c.title || "🖼️ Picture"}</span>
             <button
               className="delete"
               title="Delete chat"

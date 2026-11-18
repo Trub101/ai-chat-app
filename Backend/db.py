@@ -53,14 +53,14 @@ def delete_conversation(conversation_id):
 
 def get_messages(conversation_id):
     return run(
-        "SELECT id, role, content FROM messages WHERE conversation_id = %s ORDER BY id",
+        "SELECT id, role, content, image FROM messages WHERE conversation_id = %s ORDER BY id",
         (conversation_id,),
         fetch=True,
     )
 
 
-def add_message(conversation_id, role, content):
+def add_message(conversation_id, role, content, image=None):
     return run(
-        "INSERT INTO messages (conversation_id, role, content) VALUES (%s, %s, %s)",
-        (conversation_id, role, content),
+        "INSERT INTO messages (conversation_id, role, content, image) VALUES (%s, %s, %s, %s)",
+        (conversation_id, role, content, image),
     )

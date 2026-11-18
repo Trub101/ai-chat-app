@@ -23,8 +23,9 @@ export const deleteConversation = (id) => request(`/conversations/${id}`, { meth
 
 export const getMessages = (id) => request(`/conversations/${id}/messages`);
 
-export const sendMessage = (id, content) =>
+// image is optional: a data URL like "data:image/jpeg;base64,..."
+export const sendMessage = (id, content, image) =>
   request(`/conversations/${id}/messages`, {
     method: "POST",
-    body: JSON.stringify({ content }),
+    body: JSON.stringify({ content, image }),
   });

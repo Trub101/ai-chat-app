@@ -48,18 +48,18 @@ export default function Home({ activeId, setActiveId }) {
   }
 
   // Returns true on success, so the input box knows whether to keep the text
-  async function handleSend(text) {
+  async function handleSend(text, image) {
     setError("");
     setLoading(true);
     const tempId = `temp-${Date.now()}`; // shown right away, before the server answers
-    setMessages((prev) => [...prev, { id: tempId, role: "user", content: text }]);
+    setMessages((prev) => [...prev, { id: tempId, role: "user", content: text, image }]);
     try {
       let id = activeId;
       if (!id) {
         id = (await api.createConversation()).id; // first message starts a new conversation
         setActiveId(id);
       }
-      const reply = await api.sendMessage(id, text);
+      const reply = await api.sendMessage(id, text, image);
       setMessages((prev) => [...prev, reply]);
       loadConversations();
       return true;

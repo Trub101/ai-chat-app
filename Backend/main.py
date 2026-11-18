@@ -47,18 +47,20 @@ def send_message(conversation_id: int, body: MessageIn):
     if not os.getenv("ANTHROPIC_API_KEY"):
         raise HTTPException(status_code=500, detail=KEY_ERROR)
 
-    # full history + the new message, so Claude keeps the context of the chat
-    history = [{"role": m["role"], "content": m["content"]} for m in db.get_messages(conversation_id)]
-    history.append({"role": "user", "content": body.content})
+    # full history + the new message, so Claude keeps the context of the chat (pictures included)
+    history = db.get_messages(conversation_id)
+    history.append({"role": "user", "content": body.content, "image": body.image})
 
     try:
         reply = ai.ask_claude(history)
     except anthropic.AuthenticationError:
         raise HTTPException(status_code=500, detail=KEY_ERROR)
+    except anthropic.BadRequestError:
+        raise HTTPException(status_code=400, detail="The AI could not read this message or picture. Please try another one.")
     except anthropic.APIError:
         raise HTTPException(status_code=502, detail="The AI service is not available right now. Please try again.")
 
     # save both messages only after a successful reply, so a failed attempt leaves no half-finished turn
-    db.add_message(conversation_id, "user", body.content)
+    db.add_message(conversation_id, "user", body.content, body.image)
     reply_id = db.add_message(conversation_id, "assistant", reply)
     return {"id": reply_id, "role": "assistant", "content": reply}

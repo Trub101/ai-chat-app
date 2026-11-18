@@ -112,6 +112,9 @@ button { font: inherit; cursor: pointer; border: none; }
   border-bottom-left-radius: 4px;
 }
 
+.bubble img { display: block; max-width: 100%; max-height: 320px; border-radius: 10px; }
+.bubble img + p { margin-top: 8px; }
+
 /* animated "Thinking..." dots */
 .thinking { color: var(--muted); }
 .thinking span { animation: blink 1.4s infinite; }
@@ -130,6 +133,7 @@ button { font: inherit; cursor: pointer; border: none; }
 
 .input-bar {
   display: flex;
+  flex-wrap: wrap; /* the picture preview sits on its own row */
   gap: 10px;
   width: min(820px, calc(100% - 32px));
   margin: 0 auto 20px;
@@ -159,6 +163,24 @@ button { font: inherit; cursor: pointer; border: none; }
   font-weight: 600;
 }
 .input-bar button:disabled { opacity: 0.4; cursor: not-allowed; }
+.input-bar .attach { padding: 0 12px; background: var(--panel-2); font-size: 1.1rem; }
+.input-bar .attach:hover:not(:disabled) { animation: breathe 1.6s ease-in-out infinite; } /* gently "breathes" on hover */
+@keyframes breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
+
+/* picture chosen but not sent yet */
+.preview { position: relative; width: 100%; }
+.preview img { height: 80px; border-radius: 8px; border: 1px solid var(--border); }
+.preview button {
+  position: absolute;
+  top: -6px;
+  left: 4px;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border-radius: 50%;
+  background: var(--error);
+  font-size: 0.7rem;
+}
 
 /* ---------- About ---------- */
 .about { max-width: 960px; margin: 0 auto; padding: 48px 16px; display: flex; flex-direction: column; gap: 48px; }

@@ -12,7 +12,7 @@ export default function ChatWindow({ messages, loading }) {
     return (
       <div className="messages empty">
         <h2>How can I help you today?</h2>
-        <p>Type a message below to start a new conversation.</p>
+        <p>Type a message or add a picture 📎 below to start a new conversation.</p>
       </div>
     );
   }
@@ -21,7 +21,8 @@ export default function ChatWindow({ messages, loading }) {
     <div className="messages">
       {messages.map((m) => (
         <div key={m.id} className={`bubble ${m.role}`}>
-          {m.content}
+          {m.image && <img src={m.image} alt="Sent by the user" />}
+          {m.content && <p>{m.content}</p>}
         </div>
       ))}
       {loading && (

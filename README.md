@@ -11,6 +11,7 @@ with the full context.
 ## Features
 
 - Chat with Claude: your messages on the right, AI replies on the left
+- Send pictures with the 📎 button: the AI can see them and answer questions about them
 - Sidebar with all previous chats: click one to continue it, or ✕ to delete it
 - "New chat" button. A page refresh also starts a fresh chat, and old chats stay in the sidebar
 - The AI gets the conversation history, so it remembers what was said (the last 30 messages are sent to keep long chats fast)
@@ -68,7 +69,7 @@ message to Claude, then saves both the message and the reply.
 | Table | Columns |
 |---|---|
 | `conversations` | `id`, `created_at` |
-| `messages` | `id`, `conversation_id`, `role` (`user` / `assistant`), `content`, `created_at` |
+| `messages` | `id`, `conversation_id`, `role` (`user` / `assistant`), `content`, `image` (optional picture), `created_at` |
 
 ## How to run
 
@@ -87,8 +88,8 @@ docker compose up --build
 
 Open **http://localhost:3000**. To stop: `docker compose down`.
 
-> If you change the MySQL passwords later, reset the database with `docker compose down -v`
-> (this deletes the saved chats). MySQL only reads the passwords the first time it starts.
+> If you change the MySQL passwords or the tables later, reset the database with `docker compose down -v`
+> (this deletes the saved chats). MySQL only reads the passwords and `init.sql` the first time it starts.
 
 ### 2b. Run without Docker (for development)
 
@@ -116,6 +117,6 @@ npm run dev                    # http://localhost:3000
 | POST | `/api/conversations` | Start a new chat |
 | DELETE | `/api/conversations/{id}` | Delete a chat and its messages |
 | GET | `/api/conversations/{id}/messages` | Get all messages of a chat |
-| POST | `/api/conversations/{id}/messages` | Send `{"content": "..."}` and get the AI reply |
+| POST | `/api/conversations/{id}/messages` | Send `{"content": "...", "image": "data:image/...;base64,..."}` (`image` is optional) and get the AI reply |
 
 Interactive docs: http://localhost:8000/docs. A Postman collection is in `Backend/postman_collection.json`.

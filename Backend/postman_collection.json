@@ -47,6 +47,7 @@
         "url": "{{baseUrl}}/conversations/{{conversationId}}/messages"
       }
     },
+    {"name": "Send message with a picture", "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"content\": \"What color is this picture?\",\n  \"image\": \"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAAAKUlEQVR4nO3NsQ0AAAzCMP5/mj5RNkuZ4zSZtr0DAAAAAAAAAACA/gEHMsP8LofXz44AAAAASUVORK5CYII=\"\n}"}, "url": "{{baseUrl}}/conversations/{{conversationId}}/messages"}},
     {
       "name": "Get messages of conversation",
       "request": { "method": "GET", "url": "{{baseUrl}}/conversations/{{conversationId}}/messages" }

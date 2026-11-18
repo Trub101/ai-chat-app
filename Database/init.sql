@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS messages (
     conversation_id INT NOT NULL,
     role            ENUM('user', 'assistant') NOT NULL,  -- who said it
     content         MEDIUMTEXT NOT NULL,  -- up to 16MB, long AI answers fit
+    image           MEDIUMTEXT NULL,      -- optional picture the user sent (as a data URL)
     created_at      DATETIME DEFAULT CURRENT_TIMESTAMP,
     -- deleting a conversation also deletes its messages
     FOREIGN KEY (conversation_id) REFERENCES conversations(id) ON DELETE CASCADE

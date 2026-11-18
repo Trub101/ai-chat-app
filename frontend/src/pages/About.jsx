@@ -13,8 +13,8 @@ export default function About() {
         <h1>About the Project</h1>
         <p>
           AI Chat is a full-stack chat application in the spirit of ChatGPT and Claude. You can hold long
-          conversations with an AI assistant, come back to any previous chat later, and the assistant
-          continues with the full context of what was said.
+          conversations with an AI assistant, send it pictures to talk about, come back to any previous
+          chat later, and the assistant continues with the full context of what was said.
         </p>
       </section>
 
